@@ -1,0 +1,11 @@
+- creare modelli con python manage.py inspectdb > models.py
+- aggiungere ai modelli i field necessari
+- assegnare ad ogni clan un punto di stoccaggio ([sottocampo +] dispensa + lettera)
+  - modellare i punti di stoccaggio
+  - algoritmo di accoppiamento che mantenga il più possibile equilibrati i box
+    (problema di partizione)
+- Esportare i dati
+  - API di CAMST
+  - CSV
+  - ...
+
