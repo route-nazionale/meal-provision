@@ -17,12 +17,12 @@ run a test function written to test the assignement algorithm goodnees.
 
 To do that, clone the repo and navigate to the root folder. Than
 
-`
-cd stock_assign
-python
->>> import stock_assigner
->>> stock_assigner.test()
-`
+```
+cd stock_assign  
+python  
+(python) import stock_assigner  
+(python) stock_assigner.test()  
+```
 
 ## Requisiti
 * python 2
