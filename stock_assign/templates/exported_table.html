@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Dati da esportare</h1>
+<a href=""><h3>Scarica in formato csv</h3></a>
+{% if persons %}
+<table id="maindata" class="table table-striped table-hover">	
+	{% for p in persons %}
+		<tr>
+		{% for v in p%}
+		<td>{{ v }}</td>
+		{% endfor %}
+		</tr>
+	{% endfor %}
+</table>
+{% else %}
+No rows.
+{% endif %}
+
+<script>
+row = document.querySelector("table#maindata > tbody > tr:first-child")
+row.innerHTML = row.innerHTML.replace(/td/g, "th");
+
+</script>
+{% endblock %}
+</html>

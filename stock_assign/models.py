@@ -1,6 +1,3 @@
 from django.db import models
-
-# Create your models here.
-class MyStock(models.Model):
-	letter ="A"
-	box_num = 0
+from meal_provision.models.order import *
+from meal_provision.models.stock import *

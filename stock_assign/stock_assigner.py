@@ -98,7 +98,7 @@ def test():
 	CLAN_MAX_MEMBERS = 80
 
 	# create stocks list
-	ls = "A,B,C,D,E,F,G,H,I,L,M,N,O,P,Q,R,S,T,U,V,Z".split(",")
+	ls = "A,B,C,D,E,F,G,H,I,J,L,M,N,O,P,Q,R,S,T,U,V,Z".split(",")
 	sl = []
 	for l in ls:
 		sl.append(Stock(1, l))
