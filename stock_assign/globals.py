@@ -23,4 +23,4 @@ route_days = range(ROUTE_START_DAY, ROUTE_END_DAY + 1)
 meals_types = range(0,3)
 
 # number of meals in route
-all_meals = range(0,len(route_days) * len(meals_types) + 1)
+all_meals = range(0,len(route_days) * len(meals_types))
