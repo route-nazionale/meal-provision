@@ -63,10 +63,17 @@ class VirtualPerson(models.Model):
 	stock = 'A'
 
 	def as_map(self):
+		u = Unit.objects.filter(vclan="oneteam")[0]
 		return {
-			"code" :"x-" + self.key,
+			"code" :"x-" + str(self.id),
 			"quartier" : str(self.quartier),
 			"storeroom" : str(self.storeroom),
 			"stock" : self.stock,
+			'group' : u.gruppoID,
+			'code-type' : 'scout',
+			'allergies' : 'nessuna',
+			'unitid' : u.unitaID,
+			'vclanid' : u.vclanID,
+			'vlcan' : u.vclan,
 
 		}
