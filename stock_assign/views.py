@@ -25,6 +25,21 @@ def list_all_orders(request):
 	c['number_of_records'] = l - 1
 	return HttpResponse(t.render(c))
 
+def list_vpeople(request):
+	vv = VirtualPerson.objects.all(to_camst=True)
+	mm = []
+	for v in vv:
+		en = enumerate_meals( v.from_day, v.to_day, v.from_meal, v.to_meal)
+		ms = print_meals(v.std_meal, v.col, en)
+		rec = make_csv_record(v.as_map())
+		rec.extend(ms)
+		mm.append(v.as_list())
+	t = loader.get_template("vpeople_table.html")
+	c = RequestContext(request)
+	c['persons'] = mm
+	c['number_of_records'] = len(rs)
+	return HttpResponse(t.render(c))
+
 def orders_to_csv(request):
 	filename = "Rn2014-Pasti.csv"
 	response = HttpResponse(content_type='text_csv')

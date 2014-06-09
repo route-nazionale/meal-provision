@@ -58,10 +58,10 @@ def make_csv_titles():
 	return t
 
 def make_all_records():
-	t_c = CamstControl.objects.filter(to_camst=True)
-	pp = []
-	for c in t_c:
-		pp.append(c.person)
+	# t_c = CamstControl.objects.filter(to_camst=True)
+	pp = Person.objects.all()
+	#for c in t_c:
+	#	pp.append(c.person)
 	vv = VirtualPerson.objects.all()
 	tit = make_csv_titles()
 	mm = []
@@ -143,3 +143,17 @@ def test_enumerate_meals():
 
 def test_print_meals():
 	return print_meals('standard', 'latte', enumerate_meals(5,10,1,2))
+
+##################################################################
+#				  Virtual 	person 								 #
+##################################################################
+
+#def genera_persone_virtuali(num=1,from=4, to=13, meal="standard", col="latte"):
+	#for i in range(0,num):
+		#VirtualPerson()
+
+def set_all_to_camst():
+	ps = Person.objects.all()
+	for p in ps:
+		tc = CamstControl(person=p)
+		tc.save()
