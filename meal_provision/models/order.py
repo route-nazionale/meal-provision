@@ -18,8 +18,6 @@ class Person(models.Model):
 	to_day = models.IntegerField(default=1)
 	from_meal = models.IntegerField(default=0) # 0 = colazione, 1 = pranzo, 2 = cena
 	to_meal = models.IntegerField(default=2)
-
-	to_camst = models.BooleanField(default=True)
 	
 	def __unicode__(self):
 		return str(self.code)
@@ -45,6 +43,10 @@ class Person(models.Model):
 		}
 
 	## todo: validators?
+
+class CamstControl(models.Model):
+	to_camst = models.BooleanField(default=True)
+	person = models.ForeignKey(Person)
 
 class VirtualPerson(models.Model):
 

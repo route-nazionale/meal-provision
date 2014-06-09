@@ -58,7 +58,10 @@ def make_csv_titles():
 	return t
 
 def make_all_records():
-	pp = Person.objects.all()
+	t_c = CamstControl.objects.filter(to_camst=True)
+	pp = []
+	for c in t_c:
+		pp.append(c.person)
 	vv = VirtualPerson.objects.all()
 	tit = make_csv_titles()
 	mm = []
