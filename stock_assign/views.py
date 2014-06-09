@@ -47,10 +47,10 @@ def orders_to_csv(request):
 
 	w = writer(response)
 	## Write columns titles
-	w.writerow(make_csv_titles())
+	make_all_records(w)
 	
-	for r in make_all_records():
-		w.writerow(r)
+	#for r in make_all_records():
+	#	w.writerow(r)
 
 	# todo: fai copia cache del file ?
 

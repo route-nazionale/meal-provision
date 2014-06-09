@@ -57,27 +57,36 @@ def make_csv_titles():
 			t.append('{}/08/14-{}'.format(i,j))
 	return t
 
-def make_all_records():
+def make_all_records(writer):
 	# t_c = CamstControl.objects.filter(to_camst=True)
-	pp = Person.objects.all()
+	pp = Person.objects.filter()
 	#for c in t_c:
 	#	pp.append(c.person)
 	vv = VirtualPerson.objects.all()
 	tit = make_csv_titles()
 	mm = []
-	mm.append(tit)
+	print("======> SCRIVO TITOLI")
+	print(tit)
+	writer.writerow(tit)
+	# mm.append(tit)
+	print("======> SCRIVO PERSONE")
+	i = 0
 	for p in pp:
+		print(i)
+		i += 1
 		en = enumerate_meals( p.from_day, p.to_day, p.from_meal, p.to_meal)
 		ms = print_meals(p.std_meal, p.col, en)
 		rec = make_csv_record(p.as_map())
 		rec.extend(ms)
-		mm.append(rec)
+		#mm.append(rec)
+		writer.writerow(rec)
 	for v in vv:
 		en = enumerate_meals( v.from_day, v.to_day, v.from_meal, v.to_meal)
 		ms = print_meals(v.std_meal, v.col, en)
 		rec = make_csv_record(v.as_map())
 		rec.extend(ms)
-		mm.append(rec)
+		writer.writerow(rec)
+		#mm.append(rec)
 	return mm
 
 #######################################################

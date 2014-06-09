@@ -1,6 +1,7 @@
 from django.db import models
 from clanfuoco import *
 from stock import *
+#from stock_assign.utils import stringify_col, stringify_meal
 
 # Order is a line in the final orders file
 class Person(models.Model):
@@ -22,6 +23,7 @@ class Person(models.Model):
 	def __unicode__(self):
 		return str(self.code)
 
+
 	def as_map(self):
 		return {
 			'code' : str(self.code),
@@ -35,7 +37,7 @@ class Person(models.Model):
 			'group' : self.unit.gruppoID,
 			'unitid' : self.unit.unitaID,
 			'vclanid' : self.unit.vclanID,
-			'vlcan' : self.unit.vclan,
+			'vlcan' : self.unit.vclan + "-" + self.unit.unitaID,
 			# 'from_day' : self.from_day,
 			# 'to_day' : self.to_day,
 			# 'from_meal' : self.from_meal,
