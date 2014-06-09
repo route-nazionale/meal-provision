@@ -18,9 +18,11 @@ def list_stocks(request):
 
 def list_all_orders(request):
 	rs = make_all_records()
+	l = len(rs)
 	t = loader.get_template("exported_table.html")
 	c = RequestContext(request)
 	c['persons'] = rs
+	c['number_of_records'] = l - 1
 	return HttpResponse(t.render(c))
 
 def orders_to_csv(request):
