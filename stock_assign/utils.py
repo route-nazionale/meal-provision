@@ -85,7 +85,7 @@ def all_csv_records_iterator():
 	yield make_csv_titles()
 	for p in ps:
 		yield make_csv_record(p)
-	vs = list(VirtualPerson.objects.all()[])
+	vs = list(VirtualPerson.objects.all())
 	for v in vs:
 		yield make_csv_record(v)
 
