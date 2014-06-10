@@ -1,8 +1,9 @@
+#-*- coding: utf-8 -*-
 from django.shortcuts import HttpResponse, render
 from django.template import RequestContext, loader
 from models import *
 from utils import *
-from csv import writer
+from unicodecsv import writer
 
 def index(request):
 	return HttpResponse("<h1>Programma pasti</h1>")
@@ -39,6 +40,21 @@ def list_vpeople(request):
 	c['persons'] = mm
 	c['number_of_records'] = len(rs)
 	return HttpResponse(t.render(c))
+
+def orders_to_csv_from_to(request, from_t, to_t):
+        filename = "Rn2014-Pasti.csv"
+        response = HttpResponse(content_type='text_csv')
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+
+        w = writer(response)
+        ## Write columns titles
+        make_records_from_to(w, from_t,to_t)
+
+        #for r in make_all_records():
+        #       w.writerow(r)
+
+        # todo: fai copia cache del file ?
+	return response
 
 def orders_to_csv(request):
 	filename = "Rn2014-Pasti.csv"

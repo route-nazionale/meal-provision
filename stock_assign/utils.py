@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from meal_provision.models.order import *
 from globals import *
 
@@ -57,9 +58,41 @@ def make_csv_titles():
 			t.append('{}/08/14-{}'.format(i,j))
 	return t
 
+def make_records_from_to(writer, from_r, to_r):
+	pp = Person.objects.all()[from_r:to_r]
+        #for c in t_c:
+        #       pp.append(c.person)
+        vv = VirtualPerson.objects.all()
+        tit = make_csv_titles()
+        mm = []
+	if from_r == 1:
+	        print("======> SCRIVO TITOLI")
+        	print(tit)
+        	writer.writerow(tit)
+        # mm.append(tit)
+        print("======> SCRIVO PERSONE")
+        i = 0
+        for p in pp:
+                print(i)
+                i += 1
+                en = enumerate_meals( p.from_day, p.to_day, p.from_meal, p.to_meal)
+                ms = print_meals(p.std_meal, p.col, en)
+                rec = make_csv_record(p.as_map())
+                rec.extend(ms)
+                #mm.append(rec)
+                writer.writerow(rec)
+        for v in vv:
+                en = enumerate_meals( v.from_day, v.to_day, v.from_meal, v.to_meal)
+                ms = print_meals(v.std_meal, v.col, en)
+                rec = make_csv_record(v.as_map())
+                rec.extend(ms)
+                writer.writerow(rec)
+                #mm.append(rec)
+        return mm
+
 def make_all_records(writer):
 	# t_c = CamstControl.objects.filter(to_camst=True)
-	pp = Person.objects.filter()
+	pp = Person.objects.all()[:1000]
 	#for c in t_c:
 	#	pp.append(c.person)
 	vv = VirtualPerson.objects.all()
@@ -157,9 +190,9 @@ def test_print_meals():
 #				  Virtual 	person 								 #
 ##################################################################
 
-#def genera_persone_virtuali(num=1,from=4, to=13, meal="standard", col="latte"):
-	#for i in range(0,num):
-		#VirtualPerson()
+def genera_persone_virtuali(num,from_d, to_d, meal):
+	for i in range(0,num):
+		VirtualPerson(from_day=from_d,to_day=to_d,std_meal=meal).save()
 
 def set_all_to_camst():
 	ps = Person.objects.all()
