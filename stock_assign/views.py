@@ -18,7 +18,16 @@ def list_stocks(request):
 	return HttpResponse("<b>Stocks</b><br>" + "".join(res))
 
 def list_all_orders(request):
-	rs = make_all_records()
+	rs = make_all_records(None)
+	l = len(rs)
+	t = loader.get_template("exported_table.html")
+	c = RequestContext(request)
+	c['persons'] = rs
+	c['number_of_records'] = l - 1
+	return HttpResponse(t.render(c))
+
+def list_orders_from_to(request, from_d, to_d):
+	rs = make_records_from_to(None, from_d, to_d)
 	l = len(rs)
 	t = loader.get_template("exported_table.html")
 	c = RequestContext(request)

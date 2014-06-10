@@ -60,48 +60,15 @@ def make_csv_titles():
 
 def make_records_from_to(writer, from_r, to_r):
 	pp = Person.objects.all()[from_r:to_r]
-        #for c in t_c:
-        #       pp.append(c.person)
-        vv = VirtualPerson.objects.all()
-        tit = make_csv_titles()
-        mm = []
-	if from_r == 1:
-	        print("======> SCRIVO TITOLI")
-        	print(tit)
-        	writer.writerow(tit)
-        # mm.append(tit)
-        print("======> SCRIVO PERSONE")
-        i = 0
-        for p in pp:
-                print(i)
-                i += 1
-                en = enumerate_meals( p.from_day, p.to_day, p.from_meal, p.to_meal)
-                ms = print_meals(p.std_meal, p.col, en)
-                rec = make_csv_record(p.as_map())
-                rec.extend(ms)
-                #mm.append(rec)
-                writer.writerow(rec)
-        for v in vv:
-                en = enumerate_meals( v.from_day, v.to_day, v.from_meal, v.to_meal)
-                ms = print_meals(v.std_meal, v.col, en)
-                rec = make_csv_record(v.as_map())
-                rec.extend(ms)
-                writer.writerow(rec)
-                #mm.append(rec)
-        return mm
-
-def make_all_records(writer):
-	# t_c = CamstControl.objects.filter(to_camst=True)
-	pp = Person.objects.all()[:1000]
-	#for c in t_c:
-	#	pp.append(c.person)
-	vv = VirtualPerson.objects.all()
-	tit = make_csv_titles()
+	vv = VirtualPerson.objects.all()[from_r:to_r]
 	mm = []
-	print("======> SCRIVO TITOLI")
-	print(tit)
-	writer.writerow(tit)
-	# mm.append(tit)
+	if from_r == 1:
+	    print("======> SCRIVO TITOLI")
+    	tit = make_csv_titles()
+    	if writer:
+    		writer.writerow(tit)
+    	else:
+    		mm.append(tit)
 	print("======> SCRIVO PERSONE")
 	i = 0
 	for p in pp:
@@ -111,15 +78,57 @@ def make_all_records(writer):
 		ms = print_meals(p.std_meal, p.col, en)
 		rec = make_csv_record(p.as_map())
 		rec.extend(ms)
-		#mm.append(rec)
-		writer.writerow(rec)
+		if writer:
+			writer.writerow(rec)
+		else:
+			mm.append(rec)
 	for v in vv:
 		en = enumerate_meals( v.from_day, v.to_day, v.from_meal, v.to_meal)
 		ms = print_meals(v.std_meal, v.col, en)
 		rec = make_csv_record(v.as_map())
 		rec.extend(ms)
-		writer.writerow(rec)
-		#mm.append(rec)
+		if writer:
+			writer.writerow(rec)
+		else:
+			mm.append(rec)
+	return mm
+
+def make_all_records(writer):
+	# t_c = CamstControl.objects.filter(to_camst=True)
+	pp = Person.objects.all()[:10]
+	#for c in t_c:
+	#	pp.append(c.person)
+	vv = VirtualPerson.objects.all()[:10]
+	tit = make_csv_titles()
+	mm = []
+	print("======> SCRIVO TITOLI")
+	print(tit)
+	if writer:
+		writer.writerow(tit)
+	else:
+		mm.append(tit)
+	print("======> SCRIVO PERSONE")
+	i = 0
+	for p in pp:
+		print(i)
+		i += 1
+		en = enumerate_meals( p.from_day, p.to_day, p.from_meal, p.to_meal)
+		ms = print_meals(p.std_meal, p.col, en)
+		rec = make_csv_record(p.as_map())
+		rec.extend(ms)
+		if writer:
+			writer.writerow(rec)
+		else:
+			mm.append(rec)
+	for v in vv:
+		en = enumerate_meals( v.from_day, v.to_day, v.from_meal, v.to_meal)
+		ms = print_meals(v.std_meal, v.col, en)
+		rec = make_csv_record(v.as_map())
+		rec.extend(ms)
+		if writer:
+			writer.writerow(rec)
+		else:
+			mm.append(rec)
 	return mm
 
 #######################################################

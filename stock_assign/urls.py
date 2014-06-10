@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     url(r'^stocks/$', 'stock_assign.views.list_stocks', name='stocks'),
     url(r'^vperson/$', 'stock_assign.views.list_vpeople', name='vpeople'),
     url(r'^orders/$', 'stock_assign.views.list_all_orders', name='orders'),
+    url(r'^orders/([0-9]*)/([0-9]*)$', 'stock_assign.views.list_orders_from_to', name='orders_from_to'),
     url(r'^orders/csv$', 'stock_assign.views.orders_to_csv', name='csv'),
     url(r'^orders/csv/([0-9]*)/([0-9]*)$', 'stock_assign.views.orders_to_csv_from_to', name='csv_from_to'),
 )
