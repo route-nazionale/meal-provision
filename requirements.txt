@@ -1,2 +1,2 @@
 django-extensions
-unicodecsv
+git+https://github.com/michele-carignani/python-unicodecsv.git@master
