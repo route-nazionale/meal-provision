@@ -73,7 +73,7 @@ def make_csv_titles():
 	return t
 
 def make_csv_record(p):
-	en = enumerate_meals( p.from_day, p.to_day, p.from_meal, p.to_meal)
+	en = enumerate_meals( int(p.from_day), int(p.to_day), int(p.from_meal), int(p.to_meal))
 	ms = print_meals(p.std_meal, p.col, en)
 	l = p.as_list()
 	l.extend(ms)
@@ -82,7 +82,8 @@ def make_csv_record(p):
 def all_csv_records_iterator():
 	# todo calcolare quanti sono i ps
 	ps = list(Person.objects.all().prefetch_related('unit'))	
-	yield make_csv_titles()
+	t = make_csv_titles()
+	yield t
 	for p in ps:
 		yield make_csv_record(p)
 	vs = list(VirtualPerson.objects.all())
@@ -139,36 +140,15 @@ def print_meals(std_meal, col, days):
 
 # todo: enumerate_meals maybe substituted with a range XD
 def enumerate_meals(from_day, to_day, from_meal, to_meal):
-	""" construct list """
-	ret = []
-	d = from_day
-	m = from_meal
-	
-	# first day, append meals since arrival
-	while m <= max(meals_types):
-		ret.append(meal_number(d,m))
-		m+=1
-	d+=1
-
-	# internal day, append all meals in a day
-	while d < to_day:
-		for meal in meals_types:
-			ret.append(meal_number(d,meal))
-			meal += 1
-		d+=1
-
-	# last day, append meals until departure
-	m = meals_types[0]
-	while m <= to_meal:
-		ret.append(meal_number(d,m))
-		m+=1
-
-	return ret
+	return range(
+		meal_number(from_day,from_meal),
+		meal_number(to_day,to_meal) + 1
+	)
 
 # todo handle exceptions
 
 def test_enumerate_meals():
-	r = enumerate_meals(5, 10, 1, 2)
+	r = enumerate_meals(6, 10, 2, 2)
 	return r
 
 def test_print_meals():

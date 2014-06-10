@@ -51,14 +51,12 @@ class Person(models.Model):
 			str(self.unit.quartier.number),
 			str(self.unit.storeroom.number),
 			self.unit.stock.letter,
-			self.tipo_codice,
-			self.intolleranze_allergie,
-			self.std_meal,
-			self.col,
 			self.unit.gruppoID,
 			self.unit.unitaID,
 			self.unit.vclanID,
-			self.unit.vclan + "-" + self.unit.unitaID,
+			self.unit.vclan,
+			self.tipo_codice,
+			self.intolleranze_allergie,
 		]
 
 	## todo: validators?
@@ -91,12 +89,11 @@ class VirtualPerson(models.Model):
 			"storeroom" : str(self.storeroom),
 			"stock" : self.stock,
 			'group' : u.gruppoID,
-			'code-type' : 'scout',
-			'allergies' : 'nessuna',
 			'unitid' : u.unitaID,
 			'vclanid' : u.vclanID,
 			'vlcan' : u.vclan,
-
+			'code-type' : 'scout',
+			'allergies' : 'nessuna',
 		}
 
 	def as_list(self):
@@ -107,9 +104,9 @@ class VirtualPerson(models.Model):
 			str(self.storeroom),
 			self.stock,
 			u.gruppoID,
-			'scout',
-			'nessuna',
 			u.unitaID,
 			u.vclanID,
 			u.vclan,
+			'scout',
+			'',
 		]
