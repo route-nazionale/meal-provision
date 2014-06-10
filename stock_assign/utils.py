@@ -19,6 +19,19 @@ TITLES = {
 	'allergies' : "Intolleranze-Allergie",
 }
 
+TITLES_LIST = [
+	"Codice", 
+	"Sottocampo",
+	"Magazzino",
+	"Stoccaggio",
+	"Gruppo",
+	"UnitaID",
+	"VclanID",
+	"Vclan",
+	"Tipo-codice",
+	"Intolleranze-Allergie",
+]
+
 COLUMNS = [
 	'code',
 	'quartier',
@@ -39,7 +52,7 @@ meals_names = [
 ]
 
 ## [map] -> [string]
-def make_csv_record(m):
+def make_csv_record_from_map(m):
 	ret = []
 	for i in COLUMNS:
 		if i in m:
@@ -48,88 +61,54 @@ def make_csv_record(m):
 			ret.append("null")
 	return ret
 
+
+# todo: nel file finale i giorni vengono stampati due volte
 ## [string]
 def make_csv_titles():
-	t = make_csv_record(TITLES)
+	t = TITLES_LIST
 	# {}/08/14-Col
-	j = 0
 	for i in route_days:
 		for j in meals_names:
 			t.append('{}/08/14-{}'.format(i,j))
 	return t
 
-def make_records_from_to(writer, from_r, to_r):
-	pp = Person.objects.all()[from_r:to_r]
-	vv = VirtualPerson.objects.all()[from_r:to_r]
-	mm = []
-	if from_r == 1:
-	    print("======> SCRIVO TITOLI")
-    	tit = make_csv_titles()
-    	if writer:
-    		writer.writerow(tit)
-    	else:
-    		mm.append(tit)
-	print("======> SCRIVO PERSONE")
-	i = 0
-	for p in pp:
-		print(i)
-		i += 1
-		en = enumerate_meals( p.from_day, p.to_day, p.from_meal, p.to_meal)
-		ms = print_meals(p.std_meal, p.col, en)
-		rec = make_csv_record(p.as_map())
-		rec.extend(ms)
-		if writer:
-			writer.writerow(rec)
-		else:
-			mm.append(rec)
-	for v in vv:
-		en = enumerate_meals( v.from_day, v.to_day, v.from_meal, v.to_meal)
-		ms = print_meals(v.std_meal, v.col, en)
-		rec = make_csv_record(v.as_map())
-		rec.extend(ms)
-		if writer:
-			writer.writerow(rec)
-		else:
-			mm.append(rec)
-	return mm
+def make_csv_record(p):
+	en = enumerate_meals( p.from_day, p.to_day, p.from_meal, p.to_meal)
+	ms = print_meals(p.std_meal, p.col, en)
+	l = p.as_list()
+	l.extend(ms)
+	return l
 
-def make_all_records(writer):
-	# t_c = CamstControl.objects.filter(to_camst=True)
-	pp = Person.objects.all()[:10]
-	#for c in t_c:
-	#	pp.append(c.person)
-	vv = VirtualPerson.objects.all()[:10]
-	tit = make_csv_titles()
-	mm = []
-	print("======> SCRIVO TITOLI")
-	print(tit)
-	if writer:
-		writer.writerow(tit)
-	else:
-		mm.append(tit)
-	print("======> SCRIVO PERSONE")
-	i = 0
-	for p in pp:
-		print(i)
-		i += 1
-		en = enumerate_meals( p.from_day, p.to_day, p.from_meal, p.to_meal)
-		ms = print_meals(p.std_meal, p.col, en)
-		rec = make_csv_record(p.as_map())
-		rec.extend(ms)
-		if writer:
-			writer.writerow(rec)
-		else:
-			mm.append(rec)
-	for v in vv:
-		en = enumerate_meals( v.from_day, v.to_day, v.from_meal, v.to_meal)
-		ms = print_meals(v.std_meal, v.col, en)
-		rec = make_csv_record(v.as_map())
-		rec.extend(ms)
-		if writer:
-			writer.writerow(rec)
-		else:
-			mm.append(rec)
-	return mm
+def all_csv_records_iterator():
+	# todo calcolare quanti sono i ps
+	ps = list(Person.objects.all().prefetch_related('unit'))	
+	yield make_csv_titles()
+	for p in ps:
+		yield make_csv_record(p)
+	vs = list(VirtualPerson.objects.all()[:howmany])
+	for v in vs:
+		yield make_csv_record(v)
+
+def csv_records_iterator(howmany):
+	# todo: calcolare quanti sono i ps
+	ps = list(Person.objects.all().prefetch_related('unit')[:howmany])	
+	yield make_csv_titles()
+	for p in ps:
+		yield make_csv_record(p)
+	vs = list(VirtualPerson.objects.all()[:howmany])
+	for v in vs:
+		yield make_csv_record(v)
+
+class Echo(object):
+	"""
+	A class used as a fake file to the csv writer object.
+	logs how many records are writter
+	"""
+	n = 0
+	def write(self, val):
+		self.n+=1
+		print(self.n)
+		return val
 
 #######################################################
 #				DAYS UTILS							  #

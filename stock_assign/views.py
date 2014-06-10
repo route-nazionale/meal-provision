@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 from django.shortcuts import HttpResponse, render
+from django.http import StreamingHttpResponse
 from django.template import RequestContext, loader
 from models import *
 from utils import *
@@ -18,7 +19,7 @@ def list_stocks(request):
 	return HttpResponse("<b>Stocks</b><br>" + "".join(res))
 
 def list_all_orders(request):
-	rs = make_all_records(None)
+	rs = all_csv_records_iterator()
 	l = len(rs)
 	t = loader.get_template("exported_table.html")
 	c = RequestContext(request)
@@ -27,12 +28,14 @@ def list_all_orders(request):
 	return HttpResponse(t.render(c))
 
 def list_orders_from_to(request, from_d, to_d):
-	rs = make_records_from_to(None, from_d, to_d)
-	l = len(rs)
+	rs = csv_records_iterator(to_d)
+	l = (Person.objects.all()[:to_d]).count() + (VirtualPerson.objects.all()[:to_d]).count()
 	t = loader.get_template("exported_table.html")
 	c = RequestContext(request)
 	c['persons'] = rs
-	c['number_of_records'] = l - 1
+	c['number_of_records'] = l
+	c['frm'] = from_d
+	c['to'] = to_d
 	return HttpResponse(t.render(c))
 
 def list_vpeople(request):
@@ -50,36 +53,25 @@ def list_vpeople(request):
 	c['number_of_records'] = len(rs)
 	return HttpResponse(t.render(c))
 
-def orders_to_csv_from_to(request, from_t, to_t):
-        filename = "Rn2014-Pasti.csv"
-        response = HttpResponse(content_type='text_csv')
-        response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
-
-        w = writer(response)
-        ## Write columns titles
-        make_records_from_to(w, from_t,to_t)
-
-        #for r in make_all_records():
-        #       w.writerow(r)
-
-        # todo: fai copia cache del file ?
+def all_orders_to_csv_iterator_writer(request):
+	pseudo = Echo()
+	w = writer(pseudo)
+	response = StreamingHttpResponse(
+			(w.writerow(row) for row in all_csv_records_iterator()),
+			content_type="text/csv"
+		)
+	response['Content-Disposition'] = 'attachment; filename="RN2014-Pasti.csv"'
 	return response
 
-def orders_to_csv(request):
-	filename = "Rn2014-Pasti.csv"
-	response = HttpResponse(content_type='text_csv')
-	response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
-
-	w = writer(response)
-	## Write columns titles
-	make_all_records(w)
-	
-	#for r in make_all_records():
-	#	w.writerow(r)
-
-	# todo: fai copia cache del file ?
-
-
+def orders_to_csv_iterator_writer(request,frm,to):
+	print("router works")
+	pseudo = Echo()
+	w = writer(pseudo)
+	response = StreamingHttpResponse(
+			(w.writerow(row) for row in csv_records_iterator(to)),
+			content_type="text/csv"
+		)
+	response['Content-Disposition'] = 'attachment; filename="RN2014-Pasti.csv"'
 	return response
 
 def show_assignement():

@@ -45,6 +45,22 @@ class Person(models.Model):
 			# 'to_meal' : self.to_meal
 		}
 
+	def as_list(self):
+		return [
+			str(self.code),
+			str(self.unit.quartier.number),
+			str(self.unit.storeroom.number),
+			self.unit.stock.letter,
+			self.tipo_codice,
+			self.intolleranze_allergie,
+			self.std_meal,
+			self.col,
+			self.unit.gruppoID,
+			self.unit.unitaID,
+			self.unit.vclanID,
+			self.unit.vclan + "-" + self.unit.unitaID,
+		]
+
 	## todo: validators?
 
 class CamstControl(models.Model):
@@ -82,3 +98,18 @@ class VirtualPerson(models.Model):
 			'vlcan' : u.vclan,
 
 		}
+
+	def as_list(self):
+		u = Unit.objects.filter(vclan="oneteam")[0]
+		return [
+			"x-" + str(self.id),
+			str(self.quartier),
+			str(self.storeroom),
+			self.stock,
+			u.gruppoID,
+			'scout',
+			'nessuna',
+			u.unitaID,
+			u.vclanID,
+			u.vclan,
+		]
