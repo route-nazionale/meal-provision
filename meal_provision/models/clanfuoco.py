@@ -1,7 +1,12 @@
+#-*- coding: utf-8 -*-
 from django.db import models
 from stock import *
 
 class Unit(models.Model):
+	"""
+	Descrive una unità.
+	vedi https://github.com/route-nazionale/meal-provision/wiki/Glossario
+	"""
 	vclan = models.CharField(max_length=30) # es SULMONA 1
 	vclanID = models.CharField(max_length=30) # es B1747-T1
 	unitaID = models.CharField(max_length=30, default='T1') # es T1

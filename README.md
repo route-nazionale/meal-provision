@@ -7,7 +7,7 @@ data for meal provision and orders to the caterer.
 ## Apps
 
 * `stock_assing` : Create a balanced assignement between communities to
-be served and stocking points
+be served and stocking points and exports CSV file of the db
 
 ## Install and Test
 
@@ -27,3 +27,5 @@ python
 ## Requisiti
 * python 2
 * django 1.7
+
+other requirements can be found in file `requirements.txt`

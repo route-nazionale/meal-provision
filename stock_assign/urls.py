@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^orders/([0-9]*)/([0-9]*)$', 'stock_assign.views.list_orders_from_to', name='orders_from_to'),
     url(r'^orders/csv$', 'stock_assign.views.all_orders_to_csv_iterator_writer', name='csv'),
     url(r'^orders/csv/([0-9]*)/([0-9]*)$', 'stock_assign.views.orders_to_csv_iterator_writer', name='csv_from_to'),
-    url(r'^orders/csv-iter/([0-9]*)/([0-9]*)$', 'stock_assign.views.orders_to_csv_iterator', name='csv_from_to'),
+    url(r'^sums/$', 'stock_assign.views.show_day_counts', name='sums'),
+    
 )
 

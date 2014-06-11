@@ -6,6 +6,7 @@ from globals import *
 #				CSV UTILS				  			 #
 ######################################################
 
+# La descrizione dei vari field per il file CSV
 TITLES = {
 	'code' : "Codice", 
 	'quartier' : "Sottocampo",
@@ -19,6 +20,7 @@ TITLES = {
 	'allergies' : "Intolleranze-Allergie",
 }
 
+# I nomi dei campi in una lista (order matter!)
 TITLES_LIST = [
 	"Codice", 
 	"Sottocampo",
@@ -32,6 +34,7 @@ TITLES_LIST = [
 	"Intolleranze-Allergie",
 ]
 
+# L'ordine delle colonne nel file CSV
 COLUMNS = [
 	'code',
 	'quartier',
@@ -52,7 +55,12 @@ meals_names = [
 ]
 
 ## [map] -> [string]
+# Deprecated
 def make_csv_record_from_map(m):
+	"""
+	Costruisce una lista con i valori nell'ordine
+	dato da COLUMNS a partire dalla mappa di una Persona.
+	"""
 	ret = []
 	for i in COLUMNS:
 		if i in m:
@@ -62,14 +70,22 @@ def make_csv_record_from_map(m):
 	return ret
 
 
-# todo: nel file finale i giorni vengono stampati due volte
 ## [string]
 def make_csv_titles():
+	"""
+	Costruisce la lista dei titoli per il file
+	"""
+
+	# prende la lista dei titoli
 	t = TITLES_LIST
-	# {}/08/14-Col
+
+	# Per ogni giorno e per ogni pasto appende
+	# alla lista dei titoli una descrizione
+	# del tipo 04/08/14-Colaz
 	for i in route_days:
 		for j in meals_names:
 			t.append('{}/08/14-{}'.format(i,j))
+
 	return t
 
 def make_csv_record(p):
@@ -80,7 +96,7 @@ def make_csv_record(p):
 	return l
 
 def all_csv_records_iterator():
-	# todo calcolare quanti sono i ps
+	# todo: calcolare quanti sono i ps
 	ps = list(Person.objects.all().prefetch_related('unit'))	
 	t = make_csv_titles()
 	yield t
@@ -138,21 +154,11 @@ def print_meals(std_meal, col, days):
 			ret.append("0")
 	return ret
 
-# todo: enumerate_meals maybe substituted with a range XD
 def enumerate_meals(from_day, to_day, from_meal, to_meal):
 	return range(
 		meal_number(from_day,from_meal),
 		meal_number(to_day,to_meal) + 1
 	)
-
-# todo handle exceptions
-
-def test_enumerate_meals():
-	r = enumerate_meals(6, 10, 2, 2)
-	return r
-
-def test_print_meals():
-	return print_meals('standard', 'latte', enumerate_meals(5,10,1,2))
 
 ##################################################################
 #				  Virtual 	person 								 #
