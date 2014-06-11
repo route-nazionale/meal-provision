@@ -1,2 +1,3 @@
 django-extensions
 git+https://github.com/michele-carignani/python-unicodecsv.git@master
+http://www.djangoproject.com/download/1.7.b4/tarball/

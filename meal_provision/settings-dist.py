@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'stock_assign',
+    'meal_provision'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -83,4 +84,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+TEMPLATE_DIRS = [
+    os.path.join(BASE_DIR, 'templates'), 
+    os.path.join(BASE_DIR, 'stock_assign/templates')
+]
