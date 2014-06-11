@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content%}
+<table>
+{% for f in persons%}
+<tr>
+  {% for v in f %}
+  <td>{{ v }}</td>
+  {% endfor %}
+<tr>
+{% endfor %}
+</table>
+{% endoblock %}

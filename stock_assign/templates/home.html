@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+RN2014 - Programma pasti
+{% endblock %}
+
+{% block content %}
+<h1>Programma vettovagliamento</h1>
+<h2>Visualizza tutti gli ordini nel browser</h2>
+<a href="/stock-assign/orders">stock-assign/orders/</a><br>
+Attenzione: la pagina contiente circa 30.000 righe e richiede circa 5 min per caricare
+
+<h2>Visualizza alcuni ordini nel browser</h2>
+<!--Dal record: <input type="text" value="x"><br>
+Visualizza <input type="text" value="y"> records -->
+Ad es: visualizza 10 records a partire dal record 1<br>
+<a id="partial-view-link" href="/stock-assign/orders/1/10">
+	<span id="partial-view">stock-assign/orders/1/10</span>
+</a>
+
+<h2>Scarica tutti gli ordini in file csv</h2>
+<a href="/stock-assign/orders/csv">stock-assign/orders/csv</a>
+Attenzione: richiede circa 5 min per scaricare
+
+<h2>Visualizza tutti gli ordini nel browser</h2>
+<a href="/stock-assign/orders/csv/x/y">stock-assign/orders/csv/x/y</a>
+Attenzione: la pagina contiente circa 30.000 righe e richiede circa 5 min per caricare
+
+<h2>Visualizza tutti i punti di distribuzione</h2>
+<a href="/stock-assign/stocks">stock-assign/stocks</a>
+
+<h2>Visualizza  le persone virtuali</h2>
+<a href="/stock-assign/vperson">stock-assign/vperson</a>
+
+{% endblock %}
