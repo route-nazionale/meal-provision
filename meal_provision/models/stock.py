@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from django.db import models
 from django.core.validators import *
 
@@ -13,7 +14,7 @@ class Quartier(models.Model):
 	storerooms_number = models.IntegerField()
 
 	def __unicode__(self):
-		return self.color
+		return "Q" + str(self.number)
 
 class Storeroom(models.Model):
 	"""Models storeroom (magazzino)"""
@@ -26,7 +27,7 @@ class Storeroom(models.Model):
 		)
 
 	def __unicode__(self):
-		return self.quartier.__unicode__() + "-" + str(self.number);
+		return self.quartier.__unicode__() + "-MAG" + str(self.number);
 
 class Stock(models.Model):
 	""" Models stock point (stoccaggio) within storerooms"""
