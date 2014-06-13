@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^orders/csv$', 'stock_assign.views.all_orders_to_csv_iterator_writer', name='csv'),
     url(r'^orders/csv/([0-9]*)/([0-9]*)$', 'stock_assign.views.orders_to_csv_iterator_writer', name='csv_from_to'),
     url(r'^sums/$', 'stock_assign.views.show_day_counts', name='sums'),
+    url(r'^pdf_report/(?P<quartier>[1-5])/(?P<storeroom>[1-5])/((?P<stock>[A-Z])/)?$', 'stock_assign.views.pdf_report', name='pdf_report'),
     
 )
 

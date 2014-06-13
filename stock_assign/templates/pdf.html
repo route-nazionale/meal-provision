@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8">
+  <head>
+    <style>
+      table {
+/*
+        margin-left: auto;
+        margin-right: auto;
+*/
+      }
+      td, th {
+        border-top-width: 1px;
+        border-top-style: solid;
+        border-top-color: black;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        border-bottom-color: black;
+        border-left-width: 1px;
+        border-left-style: solid;
+        border-left-color: black;
+        border-right-width: 1px;
+        border-right-style: solid;
+        border-right-color: black;
+        padding-top: 4px;
+        padding-left: 2px;
+      }
+
+     </style>
+  </head>
+  <body>
+    <table class="pure-table pure-table-bordered" style="margin: 20px auto;">
+      <thead>
+        <th>Quartiere</th>
+        <th>Magazzino</th>
+        <th>Stoccaggio</th>
+        <th>n. unità</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="width: 10%;">{{ quartier }}</td>
+          <td style="width: 10%;">{{ storeroom }}</td>
+          <td style="width: 10%;">{{ stock }}</td>
+          <td style="width: 10%;">{{ howmany }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="pure-table pure-table-bordered" style="width: 60%;">
+      <thead>
+        <tr>
+          <th style="width: 5%;">#</th>
+          <th style="width: 25%;">Nome clan</th>
+          <th style="width: 15%;">ID clan</th>
+          <th style="width: 15%;">Nome Gruppo</th>
+          <th style="width: 15%;">ID Gruppo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for unit in units %}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{unit.vclan}}</td>
+            <td>{{unit.vclanID}}</td>
+            <td>{{unit.unitaID}}</td>
+            <td>{{unit.gruppoID}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
