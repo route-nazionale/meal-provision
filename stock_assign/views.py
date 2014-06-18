@@ -1,10 +1,20 @@
 #-*- coding: utf-8 -*-
-from django.shortcuts import HttpResponse, render
+from django.shortcuts import HttpResponse, render, render_to_response
 from django.http import StreamingHttpResponse
 from django.template import RequestContext, loader
 from models import *
 from utils import *
 from unicodecsv import writer
+from django.conf import settings
+from django.template.loader import get_template
+from django.utils.html import escape
+from django.template.context import Context
+
+import os
+import StringIO
+
+from xhtml2pdf import pisa
+
 
 def index(request):
 	"""
@@ -270,4 +280,39 @@ def new_assignement():
 	return HttpResponse("Generato nuovo assegnamento. Visualizzalo")
 
 
+def pdf_report(request, quartier, storeroom, stock):
+    '''
+    Restituisce un file PDF con una tabella che riepiloga tutti i clan 
+    assegnati ad ogni magazzino e ad ogni punto di distribizione
+    '''
+    
+    units = Unit.objects.filter(quartier__number=quartier, storeroom__number=storeroom, stock__letter=stock)
+
+    context = {}
+
+    context['units'] = units
+    context['quartier'] = quartier
+    context['storeroom'] = storeroom
+    context['stock'] = stock
+    context['howmany'] = units.count()
+    
+    context = Context(context)
+
+    template = get_template('pdf.html')
+    html = template.render(context)
+    result = StringIO.StringIO()
+
+    pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")),
+                                            dest=result,
+                                            encoding='UTF-8')
+    if not pdf.err:
+
+        filename = 'meal_report_'+quartier+'_'+storeroom+'_'+stock+'.pdf'
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="'+filename+'"'
+        response.write(result.getvalue())
+        return response
+
+    return HttpResponse('Errore durante la generazione del PDF<pre>%s</pre>' % escape(html))
 
