@@ -222,7 +222,6 @@ def show_day_counts(request):
 	for i in range(0,30):
 		meals.append(ll[i%3])
 
-
 	for p in ps:
 		print("ciao " + str(p.pcount))
 		first_meal = meal_number(p.from_day, p.from_meal)
@@ -250,8 +249,12 @@ def show_day_counts(request):
 			else:
 				print("ERRORE: Pasto sconosciuto: " + v.std_meal)
 
+	ordered_std =[]
+	for i in range(len(ORDERED_MEALS_STD)):
+		ordered_std.append(ORDERED_MEALS_STD[i] - ORDERED_MEALS_ALTRO[i])
+
 	for i in range(0,30):
-		diff_std[i] = ORDERED_MEALS_STD[i] - (sums_std[i] + virt_sums_std[i])
+		diff_std[i] = ordered_std[i] - (sums_std[i] + virt_sums_std[i])
 		diff_veg[i] = ORDERED_MEALS_ALTRO[i] - (sums_veg[i] + virt_sums_veg[i])
 
 
@@ -262,7 +265,7 @@ def show_day_counts(request):
 		meals,
 		sums_std,
 		virt_sums_std, 
-		ORDERED_MEALS_STD, 
+		ordered_std, 
 		diff_std
 	)
 	c['veg'] = zip(
