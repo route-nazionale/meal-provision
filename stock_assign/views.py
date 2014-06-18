@@ -185,14 +185,15 @@ def show_day_counts(request):
 	# Le query di django non hanno metodi per il group by perciò
 	# si usa una query raw si per le persone che per le virtual
 	ps = Person.objects.raw('''SELECT 
-			id,COUNT(code) AS pcount, 
+			id,COUNT(code) AS pcount,
+			tipo_codice,
 			to_meal, 
 			from_meal,
 			to_day,
 			from_day,
 			std_meal
 		FROM meal_provision_person
-		GROUP BY to_meal, from_meal,to_day,from_day,std_meal''')
+		GROUP BY to_meal, from_meal,to_day,from_day,std_meal,tipo_codice''')
 
 	vs = Person.objects.raw('''SELECT 
 			id,COUNT(id) AS pcount, 
@@ -223,11 +224,13 @@ def show_day_counts(request):
 		meals.append(ll[i%3])
 
 	for p in ps:
-		print("ciao " + str(p.pcount))
+
 		first_meal = meal_number(p.from_day, p.from_meal)
 		last_meal = meal_number(p.to_day, p.to_meal)
 
 		for i in range(first_meal, last_meal +1):
+			if p.tipo_codice == 'RS-SARDI' and i == meal_number(6,1):
+				continue
 
 			if p.std_meal == 'STANDARD' or p.std_meal == 'standard':
 				sums_std[i] += int(p.pcount)
