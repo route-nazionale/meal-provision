@@ -45,3 +45,11 @@ class Stock(models.Model):
 	def __unicode__(self):
 		return self.storeroom.__unicode__() + "-" + self.letter;
 
+	def __cmp__(self, other):
+		return self.box_number > other.box_number
+
+	def add(self, npeople):
+		self.box_number += npeople
+		# todo: defer query to db in a bigger batch?
+		self.save()
+

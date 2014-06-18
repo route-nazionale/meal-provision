@@ -27,7 +27,7 @@ def populate_quartiers():
 				storerooms_number=q_store_num
 				)
 			nq.save()
-			populate_stores_and_stocks(storeroom_idx)
+			populate_stores_and_stocks(nq, storeroom_idx, q_stock_num)
 			storeroom_idx += q_store_num
 
 
@@ -51,8 +51,12 @@ def populate_stores_and_stocks (q, initial_store_idx, stocks_num):
 	storeroom_idx = initial_store_idx
 	stock_idx = 0
 	for j in range(1, q.storerooms_number + 1):
-		ns = Storeroom(quartier=q, number=storeroom_idx)
-		ns.save()
+		nq = Storeroom.objects.filter(number=storeroom_idx)
+		if not nq:
+			ns = Storeroom(quartier=q, number=storeroom_idx, id=storeroom_idx)
+			ns.save()
+		else:
+			ns = nq.first()
 		storeroom_idx += 1
 
 		for k in range(1, int(stocks_num / q.storerooms_number) + 1 ):

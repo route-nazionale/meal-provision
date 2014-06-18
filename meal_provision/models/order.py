@@ -1,3 +1,4 @@
+
 #-*- coding: utf-8 -*-
 from django.db import models
 from clanfuoco import *
@@ -71,11 +72,16 @@ class Person(models.Model):
 		Restiuisce i valori come lista. L'ordine è quello necessario
 		nel file di esportazione.
 		"""
+		assigned = StockAssignement.objects.filter(unit=self.unit)
+		if(len(assigned) < 1):
+			letter = "?"
+		else:
+			letter = assigned.first().stock.letter
 		return [
 			str(self.code),
 			str(self.unit.quartier.number),
 			str(self.unit.storeroom.number),
-			self.unit.stock.letter,
+			letter,
 			self.unit.gruppoID,
 			self.unit.unitaID,
 			self.unit.vclanID,
@@ -126,6 +132,8 @@ class VirtualPerson(models.Model):
 	std_meal = models.CharField(max_length=50, default="standard")
 	col = models.CharField(max_length=20, default="latte")
 
+	tipo_codice = "OTX"
+
 	# Per le persone virtuali il valore to_camst è inserito direttamente
 	# nel modello
 	to_camst = models.BooleanField(default=True)
@@ -145,7 +153,7 @@ class VirtualPerson(models.Model):
 			'unitid' : u.unitaID,
 			'vclanid' : u.vclanID,
 			'vlcan' : u.vclan,
-			'code-type' : 'scout',
+			'code-type' : self.tipo_codice,
 			'allergies' : 'nessuna',
 			'from_day' : self.from_day,
 			'to_day' : self.to_day,
@@ -164,6 +172,6 @@ class VirtualPerson(models.Model):
 			u.unitaID,
 			u.vclanID,
 			u.vclan,
-			'scout',
+			self.tipo_codice,
 			'',
 		]

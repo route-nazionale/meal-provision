@@ -25,3 +25,38 @@ meals_types = range(0,3)
 
 # number of meals in route
 all_meals = range(0,len(route_days) * len(meals_types))
+
+ORDERED_MEALS_STD = [
+	0, 
+	1095, 
+	1095, 
+	1185, 
+	1185, 
+	1457, 
+	1457, 
+	1185, 
+	29100, 
+	29275, 
+	29275, 
+	29795, 
+	29795, 
+	30105, 
+	29795, 
+	29795, 
+	30105, 
+	29295, 
+	29285, 
+	29285, 
+	16370, 
+	565, 
+	565, 
+	565, 
+	535, 
+	535, 
+	535, 
+	475, 
+	475, 
+	0
+]
+
+ORDERED_MEALS_ALTRO = list(( i * 6 / 100 for i in ORDERED_MEALS_STD))

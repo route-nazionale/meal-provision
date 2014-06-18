@@ -2,71 +2,32 @@ import heapq
 import random
 import time
 import math
-
-#: Number of meals contained in a box (defined by caterer)
-MEALS_IN_A_BOX = 17
-
-class Stock():
-	""" Describes stocks in the heapq"""
-	# The containing storeroom (dispensa)
-	storeroom = 0
-
-	# Identification letter for the stock (punto di stoccaggio)
-	letter = "A"
-
-	# Number of boxes to be contained in this stock
-	box_num = 0
-
-	# Number of communities that are served by this stock
-	clan_num = 0
-
-	def __init__(self, s, l):
-		self.storeroom = s
-		self.letter = l
-
-	def __cmp__(self, other):
-		return self.box_num > other.box_num
-
-	def add(self, clan):
-		self.box_num += clan.boxes_needed
-		self.clan_num += 1
-
-class Clan():
-	"""Describes clans"""	
-	name = ""
-	#: How many people are in this clan
-	member_num = 0
-
-	#: How many boxes needed by this clan (calculated)
-	boxes_needed = 0
-
-	#: Which stock is serving this clan (empty if not assigned)
-	stock = ""
-
-	def __init__(self, n, mn):
-		self.name = n
-		self.member_num = mn
-		self.boxes_needed = self.calculate_boxes(mn, MEALS_IN_A_BOX)
-
-	def calculate_boxes(m, n):
-		return math.ceil( float(m) / float(n))
-
-	def assign(self, stck):
-		self.stock = stck.letter
+from meal_provision.models.clanfuoco import *
+from meal_provision.models.stock import *
 
 class StockAssigner():
 	"""Class to assign clans to stocks"""
+	
 	stock_num = 0
 	clan_num = 0
 
 	stocks = []
 	clans = []
 
-	def __init__(self, stocklist, clanlist):
-		self.clans = sorted(clanlist,reverse=True)
+	def __init__(self, r):
+		
+		self.clans = sorted(
+			Unit.objects.filter(storeroom=r), 
+			reverse=True, 
+			key=Unit.people_count
+		)
+		
 		self.clan_num = len(self.clans)
-		self.stocks = stocklist
-		heapq.heapify(self.stocks)
+		
+		self.stocks = Stock.objects.filter(storeroom=r)
+
+		heapq.heapify(list(self.stocks))
+		
 		self.stock_num = len(self.stocks)
 
 	def partition(self):
@@ -77,9 +38,14 @@ class StockAssigner():
 		low variance w.r.t number of clans)
 		"""
 		for c in self.clans:
+
 			s = heapq.heappop(self.stocks)
+
+			# todo: check that no doubles of the same group are in the stock
+
 			s.add(c)
 			c.assign(s)
+
 			heapq.heappush(self.stocks, s)
 
 	def printout(self):
@@ -120,3 +86,6 @@ def test():
 	sa.partition()
 	sa.printout()
 
+def init_test2():
+	s1 = Storeroom.objects.filter(number=1).first()
+	StockAssigner(s1)

@@ -75,7 +75,7 @@ def make_csv_titles():
 	"""
 	Costruisce la lista dei titoli per il file
 	"""
-
+	print("Costruisco i titoli")
 	# prende la lista dei titoli
 	t = TITLES_LIST
 
@@ -84,27 +84,48 @@ def make_csv_titles():
 	# del tipo 04/08/14-Colaz
 	for i in route_days:
 		for j in meals_names:
-			t.append('{}/08/14-{}'.format(i,j))
+			s = '{}/08/14-{}'.format(i,j)
+			t.append(s)
 
+	print("lunghezza dei titoli=" + str(len(t)))
 	return t
 
 def make_csv_record(p):
-	en = enumerate_meals( int(p.from_day), int(p.to_day), int(p.from_meal), int(p.to_meal))
+	en = enumerate_meals(
+		int(p.from_day), 
+		int(p.to_day), 
+		int(p.from_meal), 
+		int(p.to_meal),
+		# deve avere il pranzo del 6?
+		(p.tipo_codice != 'RS-SARDI' and p.tipo_codice != 'RS'),
+		# deve avere la cena del 10?
+		(p.tipo_codice == 'RS-FINE'),
+	)
 	ms = print_meals(p.std_meal, p.col, en)
 	l = p.as_list()
 	l.extend(ms)
 	return l
 
-def all_csv_records_iterator():
+def all_csv_records_iterator(filt=None, fval=None):
 	# todo: calcolare quanti sono i ps
-	ps = list(Person.objects.all().prefetch_related('unit'))	
+	if filt == 'codice':
+		ps = list(Person.objects.filter(code=fval).prefetch_related('unit'))
+	elif filt == 'unit':
+		ps = list(Person.objects.filter(unit=fval).prefetch_related('unit'))
+	elif filt == 'tipo-codice':
+		ps = list(Person.objects.filter(tipo_codice=fval).prefetch_related('unit'))
+	else:
+		ps = list(Person.objects.all().prefetch_related('unit'))	
+
 	t = make_csv_titles()
 	yield t
 	for p in ps:
 		yield make_csv_record(p)
-	vs = list(VirtualPerson.objects.all())
-	for v in vs:
-		yield make_csv_record(v)
+
+	if not filt:
+		vs = list(VirtualPerson.objects.all())
+		for v in vs:
+			yield make_csv_record(v)
 
 def csv_records_iterator(howmany):
 	# todo: calcolare quanti sono i ps
@@ -154,22 +175,60 @@ def print_meals(std_meal, col, days):
 			ret.append("0")
 	return ret
 
-def enumerate_meals(from_day, to_day, from_meal, to_meal):
-	return range(
+def enumerate_meals(from_day, to_day, from_meal, to_meal, lunch6=True, dine10=True):
+	r = range(
 		meal_number(from_day,from_meal),
 		meal_number(to_day,to_meal) + 1
 	)
+	l6 = meal_number(6,1)
+	d10 = meal_number(10,2)
+
+	# Trattamento speciale per il pranzo del 6
+	if l6 in r and not lunch6:
+		del r[r.index(l6)]
+
+	# Trattamento speciale per la cena del 10
+	if d10 in r and not dine10:
+		del r[r.index(d10)]
+
+	return r
 
 ##################################################################
 #				  Virtual 	person 								 #
 ##################################################################
 
-def genera_persone_virtuali(num,from_d, to_d, meal):
-	for i in range(0,num):
-		VirtualPerson(from_day=from_d,to_day=to_d,std_meal=meal).save()
+def genera_persone_virtuali(num,from_d, to_d, from_m, to_m, meal):
+	for i in range(0,num):	
+		VirtualPerson(
+			from_meal=from_m,
+			to_meal=to_m,
+			from_day=from_d,
+			to_day=to_d,
+			std_meal=meal).save()
 
 def set_all_to_camst():
 	ps = Person.objects.all()
 	for p in ps:
 		tc = CamstControl(person=p)
 		tc.save()
+
+
+###################################################################
+
+def people_5_evening():
+	ps = Person.objects.raw("""SELECT id, unit_id  FROM `meal_provision_person` 
+		WHERE `from_day` <= 5 
+		AND `to_day` >= 6 
+		AND `from_meal` <= 2
+		AND `to_meal` >= 0
+		GROUP BY unit_id""")
+	for p in ps:
+		print(p.unit.vclan + " " + p.unit.unitaID)
+
+def people_6_lunch():
+	ps = Person.objects.raw("""SELECT id, unit_id  FROM `meal_provision_person` 
+		WHERE `from_day` <= 6
+		AND `to_day` >= 6
+		GROUP BY unit_id""")
+	for p in ps:
+		print(p.unit.vclan + " " + p.unit.unitaID)

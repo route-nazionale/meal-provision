@@ -11,175 +11,58 @@
 }
 </style>
 
-<h1>Somme giornaliere</h1>
+<h1>Vett. RN2014 - Somme giornaliere</h1>
 
-<div class="day">
-	<h2>4 agosto</h2>
-	<table class="table table-striped">
-		<tr>
-			<td rowspan="4" >Colazione</td>
-			<td>1</td>
-g		<tr>
-			<td>Pranzo</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Cena</td>
-			<td></td>
-		</tr>
-	</table>
-</div>
-<div class="day">
-	<h2>5 agosto</h2>
-	<table class="table table-striped">
-		<tr>
-			<td>Colazione</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Pranzo</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Cena</td>
-			<td></td>
-		</tr>
-	</table>
-</div>
-<div class="day">
-	<h2>6 agosto</h2>
-	<table class="table table-striped">
-		<tr>
-			<td>Colazione</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Pranzo</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Cena</td>
-			<td></td>
-		</tr>
-	</table>
-</div>
-<div class="day">
-	<h2>7 agosto</h2>
-	<table class="table table-striped">
-		<tr>
-			<td>Colazione</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Pranzo</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Cena</td>
-			<td></td>
-		</tr>
-	</table>
-</div>
-<div class="day">
-	<h2>8 agosto</h2>
-	<table class="table table-striped">
-		<tr>
-			<td>Colazione</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Pranzo</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Cena</td>
-			<td></td>
-		</tr>
-	</table>
-</div>
-<div class="day">
-	<h2>9 agosto</h2>
-	<table class="table table-striped">
-		<tr>
-			<td>Colazione</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Pranzo</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Cena</td>
-			<td></td>
-		</tr>
-	</table>
-</div>
-<div class="day">
-	<h2>10 agosto</h2>
-	<table class="table table-striped">
-		<tr>
-			<td>Colazione</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Pranzo</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Cena</td>
-			<td></td>
-		</tr>
-	</table>
-</div>
-<div class="day">
-	<h2>11 agosto</h2>
-	<table class="table table-striped">
-		<tr>
-			<td>Colazione</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Pranzo</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Cena</td>
-			<td></td>
-		</tr>
-	</table>
-</div>
-<div class="day">
-	<h2>12 agosto</h2>
-	<table class="table table-striped">
-		<tr>
-			<td>Colazione</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Pranzo</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Cena</td>
-			<td></td>
-		</tr>
-	</table>
-</div>
-<div class="day">
-	<h2>13 agosto</h2>
-	<table class="table table-striped">
-		<tr>
-			<td>Colazione</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Pranzo</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Cena</td>
-			<td></td>
-		</tr>
-	</table>
-</div>
-{% endblock%}
+<p style="border:1px solid black; padding:15px; margin:15px;">
+<b>Legenda</b><br/>
+Iscritti: persone vere del db iscrizioni<br/>
+Virtuali: persone oneteam inserite per manipolare le somme<br/>
+Preventivati : i numeri dell'allegato A1 concordato con CAMST<br/>
+Ordinati: Iscritti + Virtuali
+</p>
+
+<h2>Pasto standard</h2>
+<table class="table table-striped">
+	<tr>
+		<th>Giorno</th>
+		<th>Pasto</th>
+		<th>Iscritti</th>
+		<th>Virtuali</th>
+		<th>Preventivati</th>
+		<th>Preventivati - Ordinati</th>
+	</tr>
+	{% for v in std %}
+	<tr>
+		<td>{{ v.0 }} agosto</td>
+		<td>{{ v.1 }}</td>
+		<td>{{ v.2 }}</td>
+		<td>{{ v.3 }}</td>
+		<td>{{ v.4 }}</td>
+		<td>{{ v.5 }}</td>
+	</tr>
+	{% endfor %}
+<table>
+
+<h2>Pasto Vegetariano o Vegano</h2>
+<table class="table table-striped">
+	<tr>
+		<th>Giorno</th>
+		<th>Pasto</th>
+		<th>Iscritti</th>
+		<th>Virtuali</th>
+		<th>Preventivati</th>
+		<th>Preventivati - Ordinati</th>
+	</tr>
+	{% for v in veg %}
+	<tr>
+		<td>{{ v.0 }} agosto</td>
+		<td>{{ v.1 }}</td>
+		<td>{{ v.2 }}</td>
+		<td>{{ v.3 }}</td>
+		<td>{{ v.4 }}</td>
+		<td>{{ v.5 }}</td>
+	</tr>
+	{% endfor %}
+<table>
+
+{% endblock %}

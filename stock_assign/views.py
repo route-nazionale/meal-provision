@@ -36,13 +36,12 @@ def list_all_orders(request):
 
 	# carica i dati
 	rs = all_csv_records_iterator()
-	l = len(rs)
 
 	t = loader.get_template("exported_table.html")
 
 	c = RequestContext(request)
 	c['persons'] = rs
-	c['number_of_records'] = l - 1
+	c['number_of_records'] = 0
 
 	return HttpResponse(t.render(c))
 
@@ -67,6 +66,29 @@ def list_orders_from_to(request, from_record, howmany):
 	c['to'] = howmany
 	
 	return HttpResponse(t.render(c))
+
+def list_orders_filtered(request):
+	found_filter = False
+	for f in ['codice', 'unit', 'tipo-codice']:
+		if f in request.GET:
+			records = all_csv_records_iterator(f, request.GET[f])
+			found_filter = True
+			break
+
+	if not found_filter:
+		records = []
+
+	total_count = 0
+
+	t = loader.get_template("exported_table.html")
+	
+	c = RequestContext(request)
+	c['persons'] = records
+	c['number_of_records'] = total_count
+	c['frm'] = 0
+	c['to'] = 0
+	
+	return HttpResponse(t.render(c))	
 
 def list_vpeople(request):
 	"""
@@ -169,16 +191,74 @@ def show_day_counts(request):
 			to_day,
 			from_day,
 			std_meal
-		FROM meal_provision_person
+		FROM meal_provision_virtualperson
 		GROUP BY to_meal, from_meal,to_day,from_day,std_meal''')
 
-	sums = []
-	# todo: implementare la logica per generare la tabella delle somme
-			##  INSERIRE LOGICA DELLA VISTA ##
+	sums_std = list((0 for i in range(0,30)))
+	sums_veg = list((0 for i in range(0,30)))
+
+	virt_sums_std = list((0 for i in range(0,30)))
+	virt_sums_veg = list((0 for i in range(0,30)))
+
+	diff_std = list((0 for i in range(0,30)))
+	diff_veg = list((0 for i in range(0,30)))
+
+	day_three_times = []
+	for i in range(0,30):
+		day_three_times.append((i/3)+4)
+
+	ll = ['Colazione', 'Pranzo', 'Cena']
+	meals = []
+	for i in range(0,30):
+		meals.append(ll[i%3])
+
+
+	for p in ps:
+		print("ciao " + str(p.pcount))
+		first_meal = meal_number(p.from_day, p.from_meal)
+		last_meal = meal_number(p.to_day, p.to_meal)
+
+		for i in range(first_meal, last_meal +1):
+
+			if p.std_meal == 'STANDARD' or p.std_meal == 'standard':
+				sums_std[i] += int(p.pcount)
+			elif p.std_meal == 'VEGETARIANO' or p.std_meal == 'VEGANO':
+				sums_veg[i] += int(p.pcount)
+			else:
+				print("ERRORE: Pasto sconosciuto: " + p.std_meal)
+
+	for v in vs:
+		first_meal = meal_number(v.from_day, v.from_meal)
+		last_meal = meal_number(v.to_day, v.to_meal)
+
+		for i in range(first_meal, min(last_meal +1, 29)):
+
+			if v.std_meal == 'STANDARD' or v.std_meal == 'standard':
+				virt_sums_std[i] += int(v.pcount)
+			elif v.std_meal == 'VEGETARIANO' or v.std_meal == 'VEGANO':
+				virt_sums_veg[i] += int(v.pcount)
+			else:
+				print("ERRORE: Pasto sconosciuto: " + v.std_meal)
+
+	for i in range(0,30):
+		diff_std[i] = ORDERED_MEALS_STD[i] - (sums_std[i] + virt_sums_std[i])
+		diff_veg[i] = ORDERED_MEALS_ALTRO[i] - (sums_veg[i] + virt_sums_veg[i])
+
 
 	t = loader.get_template("day_sums.html")
 	c = RequestContext(request)
-	c['sums'] = sums
+	c['std'] = zip(
+		day_three_times,
+		meals,
+		sums_std,
+		virt_sums_std, 
+		ORDERED_MEALS_STD, 
+		diff_std
+	)
+	c['veg'] = zip(
+		day_three_times,
+		meals,
+		sums_veg, virt_sums_veg, ORDERED_MEALS_ALTRO, diff_veg)
 	return HttpResponse(t.render(c))
 
 def show_assignement():
