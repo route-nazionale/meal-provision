@@ -9,12 +9,11 @@ class UnitAdmin(admin.ModelAdmin):
         'unitaID',
         'gruppoID',
         'quartier',
-        'storeroom',
-        'stock',
+        'storeroom'
     )
 
-    list_filter = ('quartier__number', 'storeroom__number', 'stock__letter')
-    list_order = ('quartier__number', 'storeroom__number', 'stock__letter')
+    list_filter = ('quartier__number', 'storeroom__number' )
+    list_order = ('quartier__number', 'storeroom__number')
 
 admin.site.register(Stock)
 admin.site.register(Quartier)
