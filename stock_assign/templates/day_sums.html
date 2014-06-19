@@ -21,7 +21,6 @@ Preventivati : i numeri dell'allegato A1 concordato con CAMST<br/>
 Ordinati: Iscritti + Virtuali
 </p>
 
-<h2>Pasto standard</h2>
 <table class="table table-striped">
 	<tr>
 		<th>Giorno</th>
@@ -32,28 +31,6 @@ Ordinati: Iscritti + Virtuali
 		<th>Preventivati - Ordinati</th>
 	</tr>
 	{% for v in std %}
-	<tr>
-		<td>{{ v.0 }} agosto</td>
-		<td>{{ v.1 }}</td>
-		<td>{{ v.2 }}</td>
-		<td>{{ v.3 }}</td>
-		<td>{{ v.4 }}</td>
-		<td>{{ v.5 }}</td>
-	</tr>
-	{% endfor %}
-<table>
-
-<h2>Pasto Vegetariano o Vegano</h2>
-<table class="table table-striped">
-	<tr>
-		<th>Giorno</th>
-		<th>Pasto</th>
-		<th>Iscritti</th>
-		<th>Virtuali</th>
-		<th>Preventivati</th>
-		<th>Preventivati - Ordinati</th>
-	</tr>
-	{% for v in veg %}
 	<tr>
 		<td>{{ v.0 }} agosto</td>
 		<td>{{ v.1 }}</td>

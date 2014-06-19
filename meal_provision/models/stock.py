@@ -49,7 +49,7 @@ class Stock(models.Model):
 		return self.box_number > other.box_number
 
 	def add(self, npeople):
-		self.box_number += npeople
+		self.box_number += int(npeople)
 		# todo: defer query to db in a bigger batch?
 		self.save()
 

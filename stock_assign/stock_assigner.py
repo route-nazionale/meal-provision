@@ -16,19 +16,25 @@ class StockAssigner():
 
 	def __init__(self, r):
 		
-		self.clans = sorted(
-			Unit.objects.filter(storeroom=r), 
-			reverse=True, 
-			key=Unit.people_count
-		)
-		
-		self.clan_num = len(self.clans)
-		
-		self.stocks = Stock.objects.filter(storeroom=r)
+		print("Cerco il magazzino")
 
-		heapq.heapify(list(self.stocks))
+		room = Storeroom.objects.get(pk=r)
+
+		print("Scarico la lista dei clan")
+
+		self.clans = Unit.objects.filter(storeroom=room).order_by("-size")
 		
-		self.stock_num = len(self.stocks)
+		# self.clan_num = len(self.clans)
+		
+		print("Scarico la lista degli stoccaggi")
+		self.stocks = list(Stock.objects.filter(storeroom=room))
+
+		print("Costruisco la heap")
+		heapq.heapify(self.stocks)
+
+		print("Finito")
+		
+		# self.stock_num = len(self.stocks)
 
 	def partition(self):
 		"""
@@ -43,8 +49,9 @@ class StockAssigner():
 
 			# todo: check that no doubles of the same group are in the stock
 
-			s.add(c)
+			s.add(c.size)
 			c.assign(s)
+			print("{}\t\t\t{}".format(c.vclan, s.__unicode__()))
 
 			heapq.heappush(self.stocks, s)
 
@@ -89,3 +96,8 @@ def test():
 def init_test2():
 	s1 = Storeroom.objects.filter(number=1).first()
 	StockAssigner(s1)
+
+def assignAll():
+	for i in range(1,28):
+		sa = StockAssigner(i)
+		sa.partition()

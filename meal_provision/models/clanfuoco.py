@@ -26,6 +26,7 @@ class Unit(models.Model):
 		if (st.storeroom != self.storeroom):
 			raise Error("Assignamento di un'unità in un altro sottocampo")
 		a = StockAssignement(unit=self,stock=st)
+		a.save()
 
 	def __unicode__(self):
 		return self.vclan + "-" + self.unitaID

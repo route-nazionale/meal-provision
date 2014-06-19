@@ -206,13 +206,8 @@ def show_day_counts(request):
 		GROUP BY to_meal, from_meal,to_day,from_day,std_meal''')
 
 	sums_std = list((0 for i in range(0,30)))
-	sums_veg = list((0 for i in range(0,30)))
-
 	virt_sums_std = list((0 for i in range(0,30)))
-	virt_sums_veg = list((0 for i in range(0,30)))
-
 	diff_std = list((0 for i in range(0,30)))
-	diff_veg = list((0 for i in range(0,30)))
 
 	day_three_times = []
 	for i in range(0,30):
@@ -232,34 +227,17 @@ def show_day_counts(request):
 			if p.tipo_codice == 'RS-SARDI' and i == meal_number(6,1):
 				continue
 
-			if p.std_meal == 'STANDARD' or p.std_meal == 'standard':
-				sums_std[i] += int(p.pcount)
-			elif p.std_meal == 'VEGETARIANO' or p.std_meal == 'VEGANO':
-				sums_veg[i] += int(p.pcount)
-			else:
-				print("ERRORE: Pasto sconosciuto: " + p.std_meal)
+			sums_std[i] += int(p.pcount)
 
 	for v in vs:
 		first_meal = meal_number(v.from_day, v.from_meal)
 		last_meal = meal_number(v.to_day, v.to_meal)
 
 		for i in range(first_meal, min(last_meal +1, 29)):
-
-			if v.std_meal == 'STANDARD' or v.std_meal == 'standard':
-				virt_sums_std[i] += int(v.pcount)
-			elif v.std_meal == 'VEGETARIANO' or v.std_meal == 'VEGANO':
-				virt_sums_veg[i] += int(v.pcount)
-			else:
-				print("ERRORE: Pasto sconosciuto: " + v.std_meal)
-
-	ordered_std =[]
-	for i in range(len(ORDERED_MEALS_STD)):
-		ordered_std.append(ORDERED_MEALS_STD[i] - ORDERED_MEALS_ALTRO[i])
+			virt_sums_std[i] += int(v.pcount)
 
 	for i in range(0,30):
-		diff_std[i] = ordered_std[i] - (sums_std[i] + virt_sums_std[i])
-		diff_veg[i] = ORDERED_MEALS_ALTRO[i] - (sums_veg[i] + virt_sums_veg[i])
-
+		diff_std[i] = ORDERED_MEALS_STD[i] - (sums_std[i] + virt_sums_std[i])
 
 	t = loader.get_template("day_sums.html")
 	c = RequestContext(request)
@@ -268,13 +246,9 @@ def show_day_counts(request):
 		meals,
 		sums_std,
 		virt_sums_std, 
-		ordered_std, 
+		ORDERED_MEALS_STD, 
 		diff_std
 	)
-	c['veg'] = zip(
-		day_three_times,
-		meals,
-		sums_veg, virt_sums_veg, ORDERED_MEALS_ALTRO, diff_veg)
 	return HttpResponse(t.render(c))
 
 def show_assignement():
