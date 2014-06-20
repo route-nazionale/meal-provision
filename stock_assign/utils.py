@@ -97,7 +97,7 @@ def make_csv_record(p):
 		int(p.from_meal), 
 		int(p.to_meal),
 		# deve avere il pranzo del 6?
-		(p.tipo_codice != 'RS-SARDI' and p.tipo_codice != 'RS'),
+		(not p.tipo_codice[:2] == 'RS'),
 		# deve avere la cena del 10?
 		(p.tipo_codice == 'RS-FINE'),
 	)
@@ -186,10 +186,6 @@ def enumerate_meals(from_day, to_day, from_meal, to_meal, lunch6=True, dine10=Tr
 	# Trattamento speciale per il pranzo del 6
 	if l6 in r and not lunch6:
 		del r[r.index(l6)]
-
-	# Trattamento speciale per la cena del 10
-	if d10 in r and not dine10:
-		del r[r.index(d10)]
 
 	return r
 

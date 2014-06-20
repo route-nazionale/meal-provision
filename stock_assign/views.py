@@ -224,7 +224,7 @@ def show_day_counts(request):
 		last_meal = meal_number(p.to_day, p.to_meal)
 
 		for i in range(first_meal, last_meal +1):
-			if p.tipo_codice == 'RS-SARDI' and i == meal_number(6,1):
+			if p.tipo_codice[:2] == 'RS' and i == meal_number(6,1):
 				continue
 
 			sums_std[i] += int(p.pcount)
