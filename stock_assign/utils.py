@@ -12,6 +12,7 @@ TITLES = {
 	'quartier' : "Sottocampo",
 	'storeroom' : "Magazzino",
 	'stock' : "Stoccaggio",
+	'regione' : "Regione",
 	'group' : "Gruppo",
 	'unitid' : "UnitaID",
 	'vclanid' : "VclanID",
@@ -26,6 +27,7 @@ TITLES_LIST = [
 	"Sottocampo",
 	"Magazzino",
 	"Stoccaggio",
+	"Regione",
 	"Gruppo",
 	"UnitaID",
 	"VclanID",
@@ -40,6 +42,7 @@ COLUMNS = [
 	'quartier',
 	'storeroom',
 	'stock',
+	'regione',
 	'group',
 	'unitid',
 	'vclanid',
@@ -77,7 +80,9 @@ def make_csv_titles():
 	"""
 	print("Costruisco i titoli")
 	# prende la lista dei titoli
-	t = TITLES_LIST
+	t = []
+	for tit in TITLES_LIST:
+		t.append(tit)
 
 	# Per ogni giorno e per ogni pasto appende
 	# alla lista dei titoli una descrizione
@@ -127,13 +132,13 @@ def all_csv_records_iterator(filt=None, fval=None):
 		for v in vs:
 			yield make_csv_record(v)
 
-def csv_records_iterator(howmany):
+def csv_records_iterator(howmany,from_record=0):
 	# todo: calcolare quanti sono i ps
-	ps = list(Person.objects.all().prefetch_related('unit')[:howmany])	
+	ps = list(Person.objects.all().prefetch_related('unit')[from_record:howmany])	
 	yield make_csv_titles()
 	for p in ps:
 		yield make_csv_record(p)
-	vs = list(VirtualPerson.objects.all()[:howmany])
+	vs = list(VirtualPerson.objects.all()[from_record:howmany])
 	for v in vs:
 		yield make_csv_record(v)
 

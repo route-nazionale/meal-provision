@@ -13,6 +13,7 @@ class Unit(models.Model):
 	gruppoID = models.CharField(max_length=30) # es B1747
 
 	size = models.IntegerField(default=0)
+	regione = models.CharField(max_length=50)
 
 	quartier = models.ForeignKey(Quartier) # int from 1 to 7, subcamps
 	storeroom = models.ForeignKey(Storeroom)

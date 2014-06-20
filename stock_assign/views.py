@@ -61,10 +61,10 @@ def list_orders_from_to(request, from_record, howmany):
 	ma permette di filtrare i risultati
 	"""
 	# todo: bug: i record restituiti sono il doppio di howmany poichè la ricerca è fatta sia in Person che in VirtualPerson
-	records = csv_records_iterator(howmany)
+	records = csv_records_iterator(howmany, from_record)
 	
-	person_count = (Person.objects.all()[:howmany]).count() 
-	virtual_person_count = (VirtualPerson.objects.all()[:howmany]).count()
+	person_count = (Person.objects.all()[from_record:howmany]).count() 
+	virtual_person_count = (VirtualPerson.objects.all()[from_record:howmany]).count()
 	total_count = person_count + virtual_person_count
 
 	t = loader.get_template("exported_table.html")

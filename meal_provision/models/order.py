@@ -82,6 +82,7 @@ class Person(models.Model):
 			str(self.unit.quartier.number),
 			str(self.unit.storeroom.number),
 			letter,
+			self.unit.regione,
 			self.unit.gruppoID,
 			self.unit.unitaID,
 			self.unit.vclanID,
