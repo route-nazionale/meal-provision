@@ -140,7 +140,7 @@ class VirtualPerson(models.Model):
 	to_camst = models.BooleanField(default=True)
 
 	quartier = 6
-	storeroom = 1
+	storeroom = 26
 	stock = 'A'
 
 	def as_map(self):
@@ -169,6 +169,7 @@ class VirtualPerson(models.Model):
 			str(self.quartier),
 			str(self.storeroom),
 			self.stock,
+			"SER",
 			u.gruppoID,
 			u.unitaID,
 			u.vclanID,
