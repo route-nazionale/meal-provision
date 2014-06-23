@@ -19,12 +19,8 @@ class Quartier(models.Model):
 class Storeroom(models.Model):
 	"""Models storeroom (magazzino)"""
 	quartier = models.ForeignKey(Quartier)
-	number = models.IntegerField(default = 1,
-			validators=[
-				MinValueValidator(1),
-				MaxValueValidator(5)
-			]
-		)
+	number = models.IntegerField(default = 1)
+	contrada_storeroom = models.IntegerField()
 
 	def __unicode__(self):
 		return self.quartier.__unicode__() + "-MAG" + str(self.number);

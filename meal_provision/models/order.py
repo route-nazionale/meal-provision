@@ -51,7 +51,7 @@ class Person(models.Model):
 		return {
 			'code' : str(self.code),
 			'quartier' : str(self.unit.quartier.number),
-			'storeroom': str(self.unit.storeroom.number),
+			'storeroom': str(self.unit.storeroom.number % 5 + 1),
 			'stock' : self.unit.stock.letter,
 			'code-type' : self.tipo_codice,
 			'allergies' : self.intolleranze_allergie,
@@ -80,7 +80,7 @@ class Person(models.Model):
 		return [
 			str(self.code),
 			str(self.unit.quartier.number),
-			str(self.unit.storeroom.number),
+			str(self.unit.storeroom.contrada_storeroom),
 			letter,
 			self.unit.regione,
 			self.unit.gruppoID,
@@ -140,7 +140,7 @@ class VirtualPerson(models.Model):
 	to_camst = models.BooleanField(default=True)
 
 	quartier = 6
-	storeroom = 26
+	storeroom = 1
 	stock = 'A'
 
 	def as_map(self):
