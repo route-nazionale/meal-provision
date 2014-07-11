@@ -205,9 +205,15 @@ def show_day_counts(request):
 		FROM meal_provision_virtualperson
 		GROUP BY to_meal, from_meal,to_day,from_day,std_meal''')
 
-	sums_std = list((0 for i in range(0,30)))
+	rs_std = list((0 for i in range(0,30)))
+	lab_std = list((0 for i in range(0,30)))
+	asilo_std = list((0 for i in range(0,30)))
+	one_std = list((0 for i in range(0,30)))
+	extra_std = list((0 for i in range(0,30)))
 	virt_sums_std = list((0 for i in range(0,30)))
+	sums_std = list((0 for i in range(0,30)))
 	diff_std = list((0 for i in range(0,30)))
+
 
 	day_three_times = []
 	for i in range(0,30):
@@ -224,10 +230,26 @@ def show_day_counts(request):
 		last_meal = meal_number(p.to_day, p.to_meal)
 
 		for i in range(first_meal, last_meal +1):
-			if p.tipo_codice[:2] == 'RS' and i == meal_number(6,1):
-				continue
+			sums_std[i]+=int(p.pcount)
 
-			sums_std[i] += int(p.pcount)
+			if p.tipo_codice[:2] == 'RS':
+
+				if i == meal_number(6,1):
+					sums_std[i]-=int(p.pcount)
+					continue
+				else:
+					rs_std[i]+=int(p.pcount)
+
+			elif p.tipo_codice == 'LAB':
+				lab_std[i] += int(p.pcount)
+			elif p.tipo_codice == 'ASILO':
+				asilo_std[i] += int(p.pcount)
+			elif p.tipo_codice == 'EXTRA':
+				extra_std[i] += int(p.pcount)
+			elif p.tipo_codice == 'ONE':
+				one_std[i] += int(p.pcount)
+			else:
+				print("Persone fuori categoria")
 
 	for v in vs:
 		first_meal = meal_number(v.from_day, v.from_meal)
@@ -244,7 +266,11 @@ def show_day_counts(request):
 	c['std'] = zip(
 		day_three_times,
 		meals,
-		sums_std,
+		rs_std,
+		one_std,
+		asilo_std,
+		extra_std,
+		lab_std,
 		virt_sums_std, 
 		ORDERED_MEALS_STD, 
 		diff_std
@@ -266,7 +292,20 @@ def pdf_report(request, quartier, storeroom, stock):
     assegnati ad ogni magazzino e ad ogni punto di distribizione
     '''
     
-    units = Unit.objects.filter(quartier__number=quartier, storeroom__number=storeroom, stock__letter=stock)
+    s = Stock.objects.get(
+    	quartier__number=quartier,
+    	storeroom__number=storeroom,
+    	letter=stock
+    )
+
+    if not s:
+    	return HttpResponse("Stoccaggio inesistente")
+
+    assignements = StockAssignement.objects.filter(stock=s).prefetch_related('unit')    
+
+    units = []
+    for a in assignements:
+    	units.append(a.unit)   
 
     context = {}
 
@@ -274,7 +313,7 @@ def pdf_report(request, quartier, storeroom, stock):
     context['quartier'] = quartier
     context['storeroom'] = storeroom
     context['stock'] = stock
-    context['howmany'] = units.count()
+    context['howmany'] = len(units)
     
     context = Context(context)
 

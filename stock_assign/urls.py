@@ -16,4 +16,3 @@ urlpatterns = patterns('',
     url(r'^pdf_report/(?P<quartier>[1-5])/(?P<storeroom>[1-5])/((?P<stock>[A-Z])/)?$', 'stock_assign.views.pdf_report', name='pdf_report'),
     
 )
-

@@ -14,6 +14,11 @@ class UnitAdmin(admin.ModelAdmin):
 
     list_filter = ('quartier__number', 'storeroom__number' )
     list_order = ('quartier__number', 'storeroom__number')
+    search_fields = ['unitaID']
+
+class PersonAdmin(admin.ModelAdmin):
+    search_fields = [ 'unit__unitaID' ]
+    list_filter = ( 'unit__unitaID')
 
 admin.site.register(Stock)
 admin.site.register(Quartier)

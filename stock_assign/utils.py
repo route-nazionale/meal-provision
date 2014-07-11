@@ -28,6 +28,7 @@ TITLES_LIST = [
 	"Magazzino",
 	"Stoccaggio",
 	"Regione",
+	"Gruppo-Trasporti",
 	"Gruppo",
 	"UnitaID",
 	"VclanID",
@@ -134,7 +135,7 @@ def all_csv_records_iterator(filt=None, fval=None):
 
 def csv_records_iterator(howmany,from_record=0):
 	# todo: calcolare quanti sono i ps
-	ps = list(Person.objects.all().prefetch_related('unit')[from_record:howmany])	
+	ps = list(Person.objects.all().prefetch_related('unit')[from_record:howmany])
 	yield make_csv_titles()
 	for p in ps:
 		yield make_csv_record(p)

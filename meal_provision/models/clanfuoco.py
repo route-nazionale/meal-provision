@@ -15,6 +15,8 @@ class Unit(models.Model):
 	size = models.IntegerField(default=0)
 	regione = models.CharField(max_length=50)
 
+	raggruppamento_trasporti = models.CharField(max_length=50)
+
 	quartier = models.ForeignKey(Quartier) # int from 1 to 7, subcamps
 	storeroom = models.ForeignKey(Storeroom)
 	#stock = models.ForeignKey(Stock) # from A to Z (22 letters)
